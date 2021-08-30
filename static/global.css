@@ -3,5 +3,29 @@
 }
 
 body {
-	font-family: "Open Sans", "Helvetica Neue", Helvetica;
+	font-family: Arial, Helvetica, sans-serif;
+	background-color: var(--off-black, black);
+	color: white;
+	margin: 0;
+}
+
+:root {
+	/* COLORS */
+	--off-black: #0b0b0b;
+	--light-purple: #ca7df9;
+	--dark-purple: #281832;
+	/* white: #000; */
+}
+
+/* UTILITY CLASSES */
+.code-txt {
+	font-family: "Courier New", Courier, monospace;
+}
+
+.prose-txt {
+	font-family: Georgia, "Times New Roman", Times, serif;
+}
+
+.hint-txt {
+	color: rgb(204, 204, 204);
 }
