@@ -1,14 +1,24 @@
 <script>
 	import { onMount } from "svelte";
+	import TextEditor from "../components/TextEditor.svelte";
+	
+	let canvas;
+	let ctx;
 	
 	onMount(() => {
 		const canvas = document.getElementById("preview");
 		// @ts-ignore
 		const ctx = canvas.getContext("2d");
+		ctx.imageSmoothingEnabled = true;
 		canvas.style.width = "100%";
-		ctx.fillStyle = "green";
-		ctx.fillRect(10,10,150,100);
+		canvas.style.height = "100%";
+		draw(ctx);
 	});
+	
+	function draw(ctx){
+		ctx.fillStyle = "green";
+		ctx.fillRect(0,0,150,100);
+	}
 
 </script>
 
@@ -21,10 +31,11 @@
 		max-height: 100vh;
 	}
 	
-	#text-editor {
+	#text-editor-container {
 		border: 1px solid red;
 		grid-row-start: 1;
 		padding: 2rem;
+		padding-left: 20px;
 	}
 	
 	#debug {
@@ -36,7 +47,6 @@
 		border: 1px solid white;
 		grid-row-start: 1;
 		grid-row-end: 3;
-		width: 100%;
 		margin: auto;
 		max-height: 80vh;
 	}
@@ -45,7 +55,9 @@
 
 
 <main>
-	<section id="text-editor" contenteditable>TEXT EDITOR</section>
+	<section id="text-editor-container">
+		<TextEditor />
+	</section>
 	<section id="debug">
 		<em class="hint-txt">This is the debug screen all (debug) commands will be shown here</em>
 		<p id="debug-output"></p>
