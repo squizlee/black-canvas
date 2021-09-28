@@ -1,21 +1,30 @@
 {
 	"name": "black-canvas",
 	"version": "0.0.1",
-  "private": true,
+	"private": true,
 	"scripts": {
 		"dev": "svelte-kit dev",
 		"build": "svelte-kit build",
 		"preview": "svelte-kit preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+		"server": "node server/index.js",
+		"dserver": "nodemon server/index.js",
+		"db:init": "node server/db/init.js"
 	},
 	"devDependencies": {
 		"@sveltejs/kit": "next",
+		"nodemon": "^2.0.13",
 		"svelte": "^3.34.0",
 		"svelte-check": "^2.0.0",
 		"svelte-preprocess": "^4.0.0",
 		"tslib": "^2.0.0",
 		"typescript": "^4.0.0"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"express": "^4.17.1",
+		"sqlite": "^4.0.23",
+		"sqlite3": "^5.0.2"
+	}
 }
