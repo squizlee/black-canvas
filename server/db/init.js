@@ -28,6 +28,7 @@ async function init() {
 			FOREIGN KEY(creator_id)	REFERENCES users(user_id)
 		);
 	`;
+
 	await db.exec(createUsersTable); // create tables
 	await db.exec(createCreationsTable); // create tables
 	console.log("SUCCESS");

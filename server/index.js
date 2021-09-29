@@ -23,9 +23,6 @@ app.use((req, res, next) => {
 });
 app.use(bodyParser.json());
 
-// connect to db
-connect();
-
 // middleware
 app.use("/api", apiRouter);
 
