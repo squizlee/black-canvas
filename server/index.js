@@ -21,7 +21,7 @@ app.use((req, res, next) => {
 	);
 	next();
 });
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // handle json in body
 
 // middleware
 app.use("/api", apiRouter);

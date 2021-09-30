@@ -24,11 +24,27 @@ router.post("/register", (req, res) => {
 	});
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
 	let body = req.body;
-	console.log(body);
 
-	res.status(200).send("Implement me please");
+	const db = await connect();
+	let row = await db.get("SELECT password from users WHERE username = ?;", [
+		body.username,
+	]);
+	if (!row) {
+		res.status(400).send("Error username does not exist");
+	} else {
+		// check password
+		bcrypt.compare(body.password, row.password, (err, result) => {
+			if (err) res.status(500).send();
+			else {
+				// TODO: Set cookie
+				result
+					? res.status(200).send()
+					: res.status(200).send("Error details incorrect");
+			}
+		});
+	}
 });
 
 export default router;

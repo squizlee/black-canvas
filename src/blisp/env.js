@@ -1,4 +1,5 @@
 // STANDARD LIBRARY/ENVIRONMENT OF BLISP
+// TODO: Test each env function
 
 const env = {
 	// arithmetic

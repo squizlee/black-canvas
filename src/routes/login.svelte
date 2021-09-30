@@ -8,6 +8,7 @@
 			password: password
 		});
 		
+		console.log("res from server ",res);
 	}
 
 </script>
