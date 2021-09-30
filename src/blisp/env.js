@@ -1,6 +1,8 @@
 // STANDARD LIBRARY/ENVIRONMENT OF BLISP
 // TODO: Test each env function
 
+// TODO: empty arg tests
+// TODO: debug return a string instead of printing to browser console
 const env = {
 	// arithmetic
 	"+": (...nums) => {

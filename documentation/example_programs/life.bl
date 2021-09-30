@@ -1,0 +1,14 @@
+(set-context "grid" 10) ;; 10x10 grid
+
+; event-handling
+(on:click cell (my-func 10))
+
+; global defines and object creation syntax
+(define x (obj 
+	:name "ethan"
+	:location "Sydney" 
+))
+
+(str-concat x:name " lives in " x:location)
+
+(define (my-func x))
