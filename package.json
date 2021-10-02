@@ -10,10 +10,12 @@
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
 		"server": "node server/index.js",
 		"dserver": "nodemon server/index.js",
-		"db:init": "node server/db/init.js"
+		"db:init": "node server/db/init.js",
+		"test": "node test/blisp/tokenizer.js"
 	},
 	"devDependencies": {
 		"@sveltejs/kit": "next",
+		"jest": "^27.2.4",
 		"nodemon": "^2.0.13",
 		"svelte": "^3.34.0",
 		"svelte-check": "^2.0.0",

@@ -6,6 +6,7 @@ const TokenTypes = {
 	DEFINE: "DEFINE",
 	OPEN: "OPEN",
 	CLOSE: "CLOSE",
+	NUMBER: "NUMBER",
 };
 
 // Takes source code, interprets and returns a JS interpretation
@@ -25,31 +26,69 @@ function tokenize(source) {
 	};
 
 	const addToken = (type, value) => tokens.push(CreateToken(type, value));
-	const isAtEnd = (c) => c === source.length;
-	const advance = (c) => {
-		return source.charAt(c);
+	const isAtEnd = () => current === source.length;
+	const advance = () => {
+		++current;
+		return source.charAt(current);
 	};
+	const peek = () => {
+		return source.charAt(current + 1);
+	};
+	const currentChar = () => {
+		return source.charAt(current);
+	};
+
+	// decimal point allowed
+	const isDigit = (char) => /\d/.test(char);
+	const isAlphaNumeric = (char) => /\d|\w/.test(char);
 
 	const tokens = [];
 	let current = 0; // current position in the source code
-	let line = 0; // capture current line for debugging purposes
+	let line = 1; // capture current line for debugging purposes
 	let start = 0; // beginning of lexeme
 
-	while (!isAtEnd(current)) {
+	while (!isAtEnd()) {
 		let char = source.charAt(current);
 
 		switch (char) {
 			case "(":
 				addToken(TokenTypes.OPEN, null);
 				break;
+			case ")":
+				addToken(TokenTypes.CLOSE, null);
+				break;
+			case "\n":
+				++line;
+				break;
+			case "\t":
+			case " ":
+			case "\r":
+				break;
 			// COMMENTS
 			case ";":
-				while (advance(current) != "\n") ++current;
+				while (current !== source.length - 1 && peek() !== "\n") {
+					console.log(currentChar());
+					advance();
+				}
 				break;
 			default:
-			// check if it matches keyword
-			// check for isNumber
-			// check for isAlphaNumeric
+				// TODO: Bug, off by one error for tokenizing
+				// TODO: Bug, numbers with decimal point but no following nums should be an error
+				// check for isNumber
+				if (isDigit(char)) {
+					start = current;
+					while (isDigit(peek()) || peek() === ".") {
+						advance();
+					}
+					//console.log("current: ", source.charAt(current));
+					const substr = source.substring(start, current);
+					//console.log(/^\d+(\.\d+)?$/.test(substr));
+					//jconsole.log(substr);
+				} else if (isAlphaNumeric()) {
+					// check if a keyword, otherwise an identifier
+				} else {
+					error("Unknown symbol", line);
+				}
 		}
 
 		++current;
@@ -60,5 +99,9 @@ function tokenize(source) {
 
 // loops through tokens and constructs AST
 function ast(tokens) {}
+
+function error(msg, line) {
+	console.error(`Error at line: ${line}, ${msg}`);
+}
 
 export default interpret;

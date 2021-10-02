@@ -16,7 +16,12 @@ true, false, let,
 
 # Functions
 
-Use the define keyword.
+```
+(func (func-name <parameters>)
+	(<operation 1>)
+	...
+	(<operation n>))
+```
 
 # Comments
 
@@ -25,3 +30,7 @@ Blisp does not support multiline comments. Any sequence of characters following 
 `; this is a comment`
 
 # Quoting
+
+# Notes
+
+-   `let` and `func` are equivalent they merely exist for semantics. For example, `let` is used to semantically define a variable while `func` is used to define a function. (But in the background a variable and a function are equivalent, they're just symbols that can be evaluated by the interpreter)

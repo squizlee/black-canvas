@@ -1,5 +1,5 @@
 <script>
-	let sourceCode = `;; Author: Unknown \n(let x 10)`;
+	let sourceCode = `;; Author: Unknown\n(let x 10)`;
 	import interpreter from "../blisp/interpreter";
 
 
