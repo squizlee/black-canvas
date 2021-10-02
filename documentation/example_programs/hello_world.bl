@@ -1,2 +1,2 @@
-(define (hello-world)
+(func (hello-world)
 	(debug "Hello World"))

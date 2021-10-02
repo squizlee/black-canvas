@@ -5,6 +5,7 @@ const TokenTypes = {
 	OPEN: "OPEN",
 	CLOSE: "CLOSE",
 	NUMBER: "NUMBER",
+	STRING: "STRING",
 	EOF: "EOF",
 	FUNC: "FUNC",
 	SYMBOL: "SYMBOL",
@@ -34,6 +35,7 @@ function tokenize(source) {
 	const addToken = (type, value) => tokens.push(CreateToken(type, value));
 	const isAtEnd = () => current === source.length;
 	const advance = () => {
+		if (isAtEnd()) return false;
 		return source.charAt(current++);
 	};
 	const peek = () => {
@@ -46,7 +48,7 @@ function tokenize(source) {
 
 	// decimal point allowed
 	const isDigit = (char) => /\d/.test(char);
-	const isAlphaNumeric = (char) => /\d|\w/.test(char);
+	const isAlphaNumeric = (char) => /(\d|\w|-|_)/.test(char);
 
 	const tokens = [];
 	let current = 0; // current position in the source code
@@ -70,6 +72,21 @@ function tokenize(source) {
 			case " ":
 			case "\r":
 				break;
+			case '"':
+				start = current + 1; // the start of the string
+				while (peek() !== '"') {
+					advance();
+					if (isAtEnd()) {
+						error("Unterminated string", line);
+						return;
+					}
+				}
+				addToken(
+					TokenTypes.STRING,
+					source.substring(start, current + 1)
+				);
+				advance(); // move past the second quote to avoid infinite loop
+				break;
 			// COMMENTS
 			case ";":
 				while (current !== source.length - 1 && peek() !== "\n") {
@@ -77,7 +94,6 @@ function tokenize(source) {
 				}
 				break;
 			default:
-				// TODO: Bug, off by one error for tokenizing
 				// TODO: Bug, numbers with decimal point but no following nums should be an error
 				// check for isNumber
 				if (isDigit(char)) {
@@ -94,7 +110,6 @@ function tokenize(source) {
 					while (isAlphaNumeric(peek())) advance();
 
 					let substr = source.substring(start, current + 1);
-					console.log("alphanum: substr", substr);
 					if (Keywords.has(substr)) {
 						addToken(Keywords.get(substr), null);
 					} else {

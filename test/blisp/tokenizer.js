@@ -3,7 +3,7 @@ import interpreter from "../../src/blisp/interpreter.js";
 
 const scriptPath = "../../documentation/example_programs/";
 
-const scripts = ["init.bl"];
+const scripts = ["init.bl", "hello_world.bl"];
 
 function readFile(scriptName) {
 	const buffer = fs.readFileSync(
@@ -15,7 +15,7 @@ function readFile(scriptName) {
 }
 
 function main() {
-	readFile(scripts[0]);
+	readFile(scripts[1]);
 }
 
 main();
