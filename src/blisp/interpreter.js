@@ -94,7 +94,6 @@ function tokenize(source) {
 				}
 				break;
 			default:
-				// TODO: Bug, numbers with decimal point but no following nums should be an error
 				// check for isNumber
 				if (isDigit(char)) {
 					start = current;
@@ -102,7 +101,9 @@ function tokenize(source) {
 						advance();
 					}
 					const substr = source.substring(start, current + 1);
-					addToken(TokenTypes.NUMBER, substr);
+					/^\d+(\.\d+)?$/.test(substr)
+						? addToken(TokenTypes.NUMBER, substr)
+						: error("Invalid number", line);
 				} else if (isAlphaNumeric()) {
 					// check for identifier/symbol
 					// check if a keyword, otherwise an identifier

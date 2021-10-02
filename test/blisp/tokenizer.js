@@ -15,7 +15,7 @@ function readFile(scriptName) {
 }
 
 function main() {
-	readFile(scripts[1]);
+	readFile(scripts[0]);
 }
 
 main();
