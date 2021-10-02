@@ -2,12 +2,18 @@
 //
 
 const TokenTypes = {
-	LET: "LET",
-	DEFINE: "DEFINE",
 	OPEN: "OPEN",
 	CLOSE: "CLOSE",
 	NUMBER: "NUMBER",
+	EOF: "EOF",
+	FUNC: "FUNC",
+	SYMBOL: "SYMBOL",
+	LET: "LET",
 };
+
+const Keywords = new Map();
+Keywords.set("let", "LET");
+Keywords.set("func", "FUNC");
 
 // Takes source code, interprets and returns a JS interpretation
 function interpret(sourceCode) {
@@ -28,10 +34,10 @@ function tokenize(source) {
 	const addToken = (type, value) => tokens.push(CreateToken(type, value));
 	const isAtEnd = () => current === source.length;
 	const advance = () => {
-		++current;
-		return source.charAt(current);
+		return source.charAt(current++);
 	};
 	const peek = () => {
+		if (isAtEnd()) return false;
 		return source.charAt(current + 1);
 	};
 	const currentChar = () => {
@@ -67,7 +73,6 @@ function tokenize(source) {
 			// COMMENTS
 			case ";":
 				while (current !== source.length - 1 && peek() !== "\n") {
-					console.log(currentChar());
 					advance();
 				}
 				break;
@@ -80,12 +85,21 @@ function tokenize(source) {
 					while (isDigit(peek()) || peek() === ".") {
 						advance();
 					}
-					//console.log("current: ", source.charAt(current));
-					const substr = source.substring(start, current);
-					//console.log(/^\d+(\.\d+)?$/.test(substr));
-					//jconsole.log(substr);
+					const substr = source.substring(start, current + 1);
+					addToken(TokenTypes.NUMBER, substr);
 				} else if (isAlphaNumeric()) {
+					// check for identifier/symbol
 					// check if a keyword, otherwise an identifier
+					start = current;
+					while (isAlphaNumeric(peek())) advance();
+
+					let substr = source.substring(start, current + 1);
+					console.log("alphanum: substr", substr);
+					if (Keywords.has(substr)) {
+						addToken(Keywords.get(substr), null);
+					} else {
+						addToken(TokenTypes.SYMBOL, substr);
+					}
 				} else {
 					error("Unknown symbol", line);
 				}
@@ -93,6 +107,8 @@ function tokenize(source) {
 
 		++current;
 	}
+
+	addToken(TokenTypes.EOF, "null");
 
 	return tokens;
 }
