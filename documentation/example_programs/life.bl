@@ -11,4 +11,4 @@
 
 (str-concat x:name " lives in " x:location)
 
-(define (my-func x))
+(func (my-func x) (+ x 1))

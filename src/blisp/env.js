@@ -1,19 +1,35 @@
 // STANDARD LIBRARY/ENVIRONMENT OF BLISP
 // TODO: Test each env function
 
-// TODO: empty arg tests
-// TODO: debug return a string instead of printing to browser console
 const env = {
 	// arithmetic
-	"+": (...nums) => {
-		nums.reduce((prev, curr) => prev + curr);
+	// nums: array
+	"+": (nums) => {
+		if (!nums) return 0;
+		return nums.reduce((prev, curr) => prev + curr, 0);
 	},
-	"*": (...nums) => {
-		nums.reduce((prev, curr) => prev * curr);
+	// nums: array
+	"*": (nums) => {
+		if (!nums) return 1;
+		return nums.reduce((prev, curr) => prev * curr, 1);
+	},
+	"-": (nums) => {
+		if (!nums) return 0;
+		return nums.reduce((prev, curr, index) => {
+			if (index === 0) return curr;
+			return prev - curr;
+		}, 0);
 	},
 
 	// misc
-	debug: (...args) => console.log(...args),
+	// args: array
+	debug: (args) => {
+		let out = "";
+		for (const element of args) {
+			out += " " + element;
+		}
+		return out;
+	},
 	time: () => Date.now(),
 };
 

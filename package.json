@@ -11,7 +11,8 @@
 		"server": "node server/index.js",
 		"dserver": "nodemon server/index.js",
 		"db:init": "node server/db/init.js",
-		"test": "node test/blisp/tokenizer.js"
+		"test:blisp": "node tests/blisp/blisp.test.js",
+		"test:env": "node tests/blisp/env.test.js"
 	},
 	"devDependencies": {
 		"@sveltejs/kit": "next",
