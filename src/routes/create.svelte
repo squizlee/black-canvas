@@ -6,9 +6,9 @@
 	let ctx;
 	
 	onMount(() => {
-		const canvas = document.getElementById("preview");
+		canvas = document.getElementById("canvas");
 		// @ts-ignore
-		const ctx = canvas.getContext("2d");
+		ctx = canvas.getContext("2d");
 		ctx.imageSmoothingEnabled = true;
 		canvas.style.width = "100%";
 		canvas.style.height = "100%";
@@ -43,7 +43,7 @@
 		grid-row-start: 2;
 	}
 	
-	#preview {
+	#canvas {
 		border: 1px solid white;
 		grid-row-start: 1;
 		grid-row-end: 3;
@@ -62,5 +62,5 @@
 		<em class="hint-txt">This is the debug screen all (debug) commands will be shown here</em>
 		<p id="debug-output"></p>
 	</section>
-	<canvas id="preview"></canvas>
+	<canvas id="canvas"></canvas>
 </main>

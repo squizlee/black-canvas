@@ -1,6 +1,6 @@
 class Tree {
 	constructor(name, children = []) {
-		this.name = name; // LIST OR ATOM
+		this.type = name; // LIST OR ATOM
 		this.children = children; // tokens
 	}
 

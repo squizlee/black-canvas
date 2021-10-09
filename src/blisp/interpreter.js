@@ -1,6 +1,7 @@
 // THE ENTRY POINT I.E. Main
 //
 import Tree from "./data_structures/Tree.js";
+import env from "./env.js";
 
 const TokenTypes = {
 	OPEN: "OPEN",
@@ -13,6 +14,8 @@ const TokenTypes = {
 	LET: "LET",
 	IF: "IF",
 	ELSE: "ELSE",
+	TRUE: "TRUE",
+	FALSE: "FALSE",
 };
 
 const Keywords = new Map();
@@ -20,6 +23,8 @@ Keywords.set("let", "LET");
 Keywords.set("func", "FUNC");
 Keywords.set("if", "IF");
 Keywords.set("else", "ELSE");
+Keywords.set("true", "TRUE");
+Keywords.set("false", "FALSE");
 
 let hasErrors = false;
 
@@ -38,7 +43,63 @@ function interpret(sourceCode) {
 }
 
 function evaluate(AST) {
-	console.log("input AST", AST);
+	let output = []; // array of outputs
+
+	// takes a token and evaluates it to a js value
+	const handleType = (token) => {
+		switch (token.type) {
+			case "STRING":
+				return token.value;
+			case "NUMBER":
+				return Number(token.value);
+			default:
+				console.log("ERROR", token);
+				error("Undefined type not supported by evaluator", "");
+				break;
+		}
+	};
+
+	// evaluate list and return value
+	const evalList = (list) => {
+		// make sure symbol/operator is defined
+		// check here for special forms
+		// func, let, if, else
+		if (!env[list.children[0].value]) {
+			error(`${list.children[0].value} is not defined`);
+		}
+
+		let elements = list.children;
+		let operator = elements[0].value;
+		let args = []; // all the values that the operator will apply with
+		// collect arguments
+		for (let i = 1; i < elements.length; ++i) {
+			if (elements[i].type === "LIST") {
+				args.push(evalList(elements[i]));
+			} else args.push(handleType(elements[i]));
+		}
+
+		let answer = env[operator](args);
+		console.log("answer, args", answer, args);
+
+		return answer;
+	};
+
+	for (const item of AST) {
+		if (item.type === "LIST") {
+			// do stuff
+			output.push(evalList(item));
+		} else {
+			// ATOM
+			output.push(handleType(item.children[0]));
+		}
+	}
+	console.log(output);
+	// for every item in AST, evaluate it
+	// probably need to do a first pass for function declarations and global variables
+	// second pass is for the actual running and evaluation of the program
+	// for every list item, evaluate the operator, its arguments, then apply operator on arguments
+	// if func treat differently: create fu
+	// if global let add to env object
 }
 
 // creates an array of tokens from source code
