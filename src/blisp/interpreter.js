@@ -30,6 +30,7 @@ let hasErrors = false;
 
 // Takes source code, interprets and returns a JS interpretation
 function interpret(sourceCode) {
+	hasErrors = false;
 	console.log("Interpreting...");
 	const TOKENS = tokenize(sourceCode);
 
@@ -44,6 +45,7 @@ function interpret(sourceCode) {
 
 function evaluate(AST) {
 	let output = []; // array of outputs
+	let program = {}; // @reminder append this to env
 
 	// takes a token and evaluates it to a js value
 	const handleType = (token) => {
@@ -52,6 +54,9 @@ function evaluate(AST) {
 				return token.value;
 			case "NUMBER":
 				return Number(token.value);
+			// ignore symbols
+			case "SYMBOL":
+				return token.value;
 			default:
 				console.log("ERROR", token);
 				error("Undefined type not supported by evaluator", "");
@@ -61,10 +66,37 @@ function evaluate(AST) {
 
 	// evaluate list and return value
 	const evalList = (list) => {
-		// make sure symbol/operator is defined
-		// check here for special forms
-		// func, let, if, else
-		if (!env[list.children[0].value]) {
+		// helper functions
+		const numArgs = (list) => list.children.length - 1; // exclude operator
+		const LET = () => {
+			let output; // string to output and display
+			switch (numArgs(list)) {
+				case 1:
+					program[list.children[1].value] = null;
+					output = `${list.children[1].value} = null`;
+					break;
+				case 2:
+					program[list.children[1].value] = list.children[2].value;
+					output = `${list.children[1].value} = ${list.children[2].value}`;
+					break;
+				default:
+					error(
+						"Let requires 1 or 2 arguments, you supplied " +
+							numArgs(list) +
+							" arguments"
+					);
+					output = "Error";
+					break;
+			}
+			return output;
+		};
+
+		// make sure the current symbol/operator is defined
+		// or if it is a keyword
+		if (
+			!Keywords.has(list.children[0].value) &&
+			!env[list.children[0].value]
+		) {
 			error(`${list.children[0].value} is not defined`);
 		}
 
@@ -78,9 +110,22 @@ function evaluate(AST) {
 			} else args.push(handleType(elements[i]));
 		}
 
-		let answer = env[operator](args);
+		// check here for special forms
+		// func, let, if, else
+		let answer;
+		switch (operator) {
+			case "let":
+				answer = LET();
+				break;
+			default:
+				// defined by standard lib
+				answer = env[operator](args);
+				break;
+		}
 		console.log("answer, args", answer, args);
 
+		console.log("program before adding to env", program);
+		env.program = program;
 		return answer;
 	};
 
@@ -94,12 +139,6 @@ function evaluate(AST) {
 		}
 	}
 	console.log(output);
-	// for every item in AST, evaluate it
-	// probably need to do a first pass for function declarations and global variables
-	// second pass is for the actual running and evaluation of the program
-	// for every list item, evaluate the operator, its arguments, then apply operator on arguments
-	// if func treat differently: create fu
-	// if global let add to env object
 }
 
 // creates an array of tokens from source code
@@ -194,7 +233,7 @@ function tokenize(source) {
 
 					let substr = source.substring(start, current + 1);
 					if (Keywords.has(substr)) {
-						addToken(Keywords.get(substr), null);
+						addToken(Keywords.get(substr), substr);
 					} else {
 						addToken(TokenTypes.SYMBOL, substr);
 					}
@@ -288,6 +327,7 @@ function error(msg, location) {
 		console.error(`Error at line: ${location}, ${msg}`);
 	if (typeof location === "string")
 		console.error(`Error at ${location}, ${msg}`);
+	if (!location) console.error(`Error: ${msg}`);
 }
 
 export default interpret;

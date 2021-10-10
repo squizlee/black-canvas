@@ -1,10 +1,12 @@
 <script>
 	import { onMount } from "svelte";
 	import TextEditor from "../components/TextEditor.svelte";
+	import env from "../blisp/env.js";
 	
 	let canvas;
 	let ctx;
 	
+
 	onMount(() => {
 		canvas = document.getElementById("canvas");
 		// @ts-ignore
@@ -12,13 +14,12 @@
 		ctx.imageSmoothingEnabled = true;
 		canvas.style.width = "100%";
 		canvas.style.height = "100%";
-		draw(ctx);
+		
+		// populate ctx
+		env._ctx = ctx;
+		console.log(env);
 	});
 	
-	function draw(ctx){
-		ctx.fillStyle = "green";
-		ctx.fillRect(0,0,150,100);
-	}
 
 </script>
 
@@ -59,7 +60,7 @@
 		<TextEditor />
 	</section>
 	<section id="debug">
-		<em class="hint-txt">This is the debug screen all (debug) commands will be shown here</em>
+		<em class="hint-txt">This is the output screen all evaluations and (debug) commands will go here</em>
 		<p id="debug-output"></p>
 	</section>
 	<canvas id="canvas"></canvas>
