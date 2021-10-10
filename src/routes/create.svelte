@@ -60,7 +60,7 @@
 		<TextEditor />
 	</section>
 	<section id="debug">
-		<em class="hint-txt">This is the output screen all evaluations and (debug) commands will go here</em>
+		<em class="hint-txt">This is the output screen, all evaluations and (debug) commands will go here</em>
 		<p id="debug-output"></p>
 	</section>
 	<canvas id="canvas"></canvas>
