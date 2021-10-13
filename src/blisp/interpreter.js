@@ -56,13 +56,17 @@ function evaluate(AST) {
 				return Number(token.value);
 			// ignore symbols
 			case "SYMBOL":
-				return token.value;
+				console.log("token value", token.value);
+				return env.program[token.value];
+				//return token.value;
 			default:
 				console.log("ERROR", token);
 				error("Undefined type not supported by evaluator", "");
 				break;
 		}
 	};
+
+	//@BUG Symbols aren't evaluated as their values
 
 	// evaluate list and return value
 	const evalList = (list) => {
@@ -76,9 +80,10 @@ function evaluate(AST) {
 					output = `${list.children[1].value} = null`;
 					break;
 				case 2:
-					program[list.children[1].value] = list.children[2].value;
+					let value = handleType(list.children[2]);
+					program[list.children[1].value] = value;
 					console.log("hi", list.children[2]);
-					output = `${list.children[1].value} = ${list.children[2].value}`;
+					output = `${list.children[1].value} = ${value}`;
 					break;
 				default:
 					error(
@@ -128,6 +133,7 @@ function evaluate(AST) {
 
 		console.log("program before adding to env", program);
 		env.program = program;
+		console.log(env);
 
 		return answer;
 	};
@@ -141,9 +147,9 @@ function evaluate(AST) {
 			output.push(handleType(item.children[0]));
 		}
 	}
-	// @BUG?: null sometimes gets pushed to answer when list is a procedure and not a function
+	// @BUG?: sometimes gets pushed to answer when list is a procedure and not a function
 	console.log(output);
-	console.log(output.filter(el => el !== null));
+	console.log(output.filter(el => el !== undefined));
 }
 
 // creates an array of tokens from source code
