@@ -77,6 +77,7 @@ function evaluate(AST) {
 					break;
 				case 2:
 					program[list.children[1].value] = list.children[2].value;
+					console.log("hi", list.children[2]);
 					output = `${list.children[1].value} = ${list.children[2].value}`;
 					break;
 				default:
@@ -120,12 +121,14 @@ function evaluate(AST) {
 			default:
 				// defined by standard lib
 				answer = env[operator](args);
+				list.value = answer; // list maintains value 
 				break;
 		}
 		console.log("answer, args", answer, args);
 
 		console.log("program before adding to env", program);
 		env.program = program;
+
 		return answer;
 	};
 
@@ -138,7 +141,9 @@ function evaluate(AST) {
 			output.push(handleType(item.children[0]));
 		}
 	}
+	// @BUG?: null sometimes gets pushed to answer when list is a procedure and not a function
 	console.log(output);
+	console.log(output.filter(el => el !== null));
 }
 
 // creates an array of tokens from source code

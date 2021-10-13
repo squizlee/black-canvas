@@ -34,7 +34,10 @@ const env = {
 
 	// CANVAS API SUPPORT
 	// THIS ONLY WORKS WHEN THE CREATE.SVELTE CREATES CONTEXT
-	"set-fillStyle": (args) => (env._ctx.fillStyle = args[0]),
+	"set-fillStyle": (args) => {
+		env._ctx.fillStyle = args[0];
+		return null;
+	},
 	fillRect: (args) => env._ctx.fillRect(args[0], args[1], args[2], args[3]),
 };
 
