@@ -60,6 +60,7 @@ function evaluate(AST) {
 				if (program[token.value]) return program[token.value];
 				return token.value;
 			case "LIST":
+				evalList(token);
 				return token.value;
 			//return token.value;
 			default:
@@ -99,28 +100,45 @@ function evaluate(AST) {
 			return output;
 		};
 
+		const FUNC = () => {
+			let output;
+			let func_name;
+			let elements = [list.children[1], list.children[2]];
+			let parameters = [];
+			if (numArgs(list) < 2) {
+				error(
+					"Func expects the form (func (<name> <parameters>...) ...(<body>)"
+				);
+				return;
+			}
+
+			console.log("ELEMENTS", elements);
+
+			return "Functions not implemented yet";
+		};
+
+		let answer;
+
 		let elements = list.children;
 		let operator = elements[0].value;
-		let args = []; // all the values that the operator will apply with
-		// collect arguments
-		for (let i = 1; i < elements.length; ++i) {
-			if (elements[i].type === "LIST") {
-				args.push(evalList(elements[i]));
-			} else args.push(handleType(elements[i]));
-		}
+		let args = [];
 
-		// check here for special forms
-		// func, let, if, else
-		let answer;
 		switch (operator) {
 			case "let":
 				answer = LET();
 				break;
+			case "func":
+				answer = FUNC();
+				break;
 			default:
-				// defined by standard lib
+				// collect arguments
+				for (let i = 1; i < elements.length; ++i) {
+					if (elements[i].type === "LIST") {
+						args.push(evalList(elements[i]));
+					} else args.push(handleType(elements[i]));
+				}
 				answer = env[operator](args);
-				console.log("answer, args", answer, args);
-				list.value = answer; // list maintains value
+				list.value = answer;
 				break;
 		}
 

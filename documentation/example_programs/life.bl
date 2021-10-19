@@ -1,14 +1,13 @@
 (set-context "grid" 10) ;; 10x10 grid
 
+;; colours
+(let alive "green")
+(let dead "black")
+
+(func (change-state cell)
+	(set cell:state (not cell:state)))
+
+(func (update grid))
+
 ; event-handling
-(on:click cell (my-func 10))
-
-; global defines and object creation syntax
-(define x (obj 
-	:name "ethan"
-	:location "Sydney" 
-))
-
-(str-concat x:name " lives in " x:location)
-
-(func (my-func x) (+ x 1))
+(on:click cell (change-state cell))

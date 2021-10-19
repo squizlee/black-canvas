@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
 	import { onMount } from "svelte";
 	import TextEditor from "../components/TextEditor.svelte";
 	import env from "../blisp/env.js";
@@ -9,14 +11,17 @@
 
 	onMount(() => {
 		canvas = document.getElementById("canvas");
-		// @ts-ignore
+		let container = document.getElementById("canvas-container");
+		
 		ctx = canvas.getContext("2d");
 		ctx.imageSmoothingEnabled = true;
-		canvas.style.width = "100%";
-		canvas.style.height = "100%";
-		
+		canvas.width = container.clientWidth;
+		canvas.height = container.clientHeight;
+
 		// populate ctx
 		env._ctx = ctx;
+		env._width = canvas.width;
+		env._height = canvas.height;
 		console.log(env);
 	});
 	
@@ -37,6 +42,7 @@
 		grid-row-start: 1;
 		padding: 2rem;
 		padding-left: 20px;
+		min-width: 100%;
 	}
 	
 	#debug {
@@ -44,12 +50,13 @@
 		grid-row-start: 2;
 	}
 	
-	#canvas {
+	#canvas-container {
 		border: 1px solid white;
 		grid-row-start: 1;
 		grid-row-end: 3;
 		margin: auto;
-		max-height: 80vh;
+		height: 100vh;
+		width: 100%;
 	}
 	
 </style>
@@ -63,5 +70,7 @@
 		<em class="hint-txt">This is the output screen, all evaluations and (debug) commands will go here</em>
 		<p id="debug-output"></p>
 	</section>
-	<canvas id="canvas"></canvas>
+	<section id="canvas-container">
+		<canvas id="canvas"></canvas>
+	</section>
 </main>

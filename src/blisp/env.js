@@ -1,5 +1,6 @@
 // STANDARD LIBRARY/ENVIRONMENT OF BLISP
 // TODO: Test each env function
+import * as util from "./util.js";
 
 const env = {
 	// arithmetic
@@ -38,6 +39,21 @@ const env = {
 		env._ctx.fillStyle = args[0];
 	},
 	fillRect: (args) => env._ctx.fillRect(args[0], args[1], args[2], args[3]),
+
+	// BLISP API
+	// ARGS:
+	//		CONTEXT: STRING ("grid")
+	"set-context": (args) => {
+		console.log(args);
+		let size = args[1];
+		let width;
+		let height;
+		util.drawGrid(env._ctx, size);
+	},
+	clear: () => {
+		env._ctx.clearRect(0, 0, env._width, env._height);
+		return "cleared";
+	},
 };
 
 export default env;

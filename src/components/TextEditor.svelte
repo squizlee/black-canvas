@@ -1,6 +1,7 @@
 <script>
-	let sourceCode = `;; Author: Unknown\n(let x 10)`;
+	let sourceCode = `;; Author: Unknown\n(set-context \"grid\" 10)`;
 	import interpreter from "../blisp/interpreter";
+	import env from "../blisp/env.js";
 
 
 	function keyInput(e){
@@ -12,6 +13,8 @@
 		
 		if(e.key === "Enter" && e.ctrlKey )
 		{
+			// clear canvas before running again
+			env.clear();
 			// pass value to interpreter
 			interpreter(sourceCode);
 		}

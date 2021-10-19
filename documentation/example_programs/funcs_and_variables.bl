@@ -1,0 +1,13 @@
+(func (do-math x y z)
+	(+ x y z))
+
+(func (nested x)
+	(+ 1 2 (+ x 1)))
+	
+;;(func (do-more-math x y)
+;;	(+ y 1)
+;;	(+ x 1))
+
+(do-math 1 1 1) ;; should return 3
+
+;;(do-more-math 1 1)
