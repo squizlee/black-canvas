@@ -14,7 +14,8 @@ test();
 function testAddition() {
 	const none = env["+"]([]);
 	const some = env["+"]([1, 2, 3]);
-	console.log("addition", none, some);
+	const stringWeirdnesss = env["+"](["x", "y"]);
+	console.log("addition", none, some, stringWeirdnesss);
 }
 
 function testMultiply() {

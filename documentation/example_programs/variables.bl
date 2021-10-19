@@ -2,5 +2,7 @@
 
 (let x 10) ;; define x 10
 
-(debug x) ;;  display the value
-(let x 10 (debug 10))
+(+ 2 (+ 1 1 (* 10 10)))
+(let y (+ 1 5))
+
+(+ x (+ y 1))

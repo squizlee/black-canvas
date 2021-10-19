@@ -46,6 +46,7 @@ function interpret(sourceCode) {
 function evaluate(AST) {
 	let output = []; // array of outputs
 	let program = {}; // @reminder append this to env
+	logAST(AST);
 
 	// takes a token and evaluates it to a js value
 	const handleType = (token) => {
@@ -56,9 +57,11 @@ function evaluate(AST) {
 				return Number(token.value);
 			// ignore symbols
 			case "SYMBOL":
-				console.log("token value", token.value);
-				return env.program[token.value];
-				//return token.value;
+				if (program[token.value]) return program[token.value];
+				return token.value;
+			case "LIST":
+				return token.value;
+			//return token.value;
 			default:
 				console.log("ERROR", token);
 				error("Undefined type not supported by evaluator", "");
@@ -82,7 +85,6 @@ function evaluate(AST) {
 				case 2:
 					let value = handleType(list.children[2]);
 					program[list.children[1].value] = value;
-					console.log("hi", list.children[2]);
 					output = `${list.children[1].value} = ${value}`;
 					break;
 				default:
@@ -96,15 +98,6 @@ function evaluate(AST) {
 			}
 			return output;
 		};
-
-		// make sure the current symbol/operator is defined
-		// or if it is a keyword
-		if (
-			!Keywords.has(list.children[0].value) &&
-			!env[list.children[0].value]
-		) {
-			error(`${list.children[0].value} is not defined`);
-		}
 
 		let elements = list.children;
 		let operator = elements[0].value;
@@ -126,30 +119,26 @@ function evaluate(AST) {
 			default:
 				// defined by standard lib
 				answer = env[operator](args);
-				list.value = answer; // list maintains value 
+				console.log("answer, args", answer, args);
+				list.value = answer; // list maintains value
 				break;
 		}
-		console.log("answer, args", answer, args);
-
-		console.log("program before adding to env", program);
-		env.program = program;
-		console.log(env);
 
 		return answer;
 	};
 
 	for (const item of AST) {
 		if (item.type === "LIST") {
-			// do stuff
 			output.push(evalList(item));
 		} else {
 			// ATOM
 			output.push(handleType(item.children[0]));
 		}
 	}
+	env.program = program;
 	// @BUG?: sometimes gets pushed to answer when list is a procedure and not a function
 	console.log(output);
-	console.log(output.filter(el => el !== undefined));
+	console.log(output.filter((el) => el !== undefined));
 }
 
 // creates an array of tokens from source code
@@ -339,6 +328,12 @@ function error(msg, location) {
 	if (typeof location === "string")
 		console.error(`Error at ${location}, ${msg}`);
 	if (!location) console.error(`Error: ${msg}`);
+}
+
+function logAST(AST) {
+	for (const tree of AST) {
+		tree.log();
+	}
 }
 
 export default interpret;
