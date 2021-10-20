@@ -14,10 +14,10 @@ function drawGrid(ctx, size) {
 	ctx.strokeStyle = "red";
 	let spacingY = height / size;
 	let spacingX = width / size;
-	let currentX = spacingX;
-	let currentY = spacingY;
+	let currentX = 0;
+	let currentY = 0;
 	// draw rows
-	for (let i = 0; i < size; ++i) {
+	for (let i = 0; i < size + 1; ++i) {
 		ctx.beginPath();
 		ctx.moveTo(0, currentY);
 		ctx.lineTo(width, currentY);
@@ -26,7 +26,7 @@ function drawGrid(ctx, size) {
 	}
 
 	// draw columns
-	for (let i = 0; i < size; ++i) {
+	for (let i = 0; i < size + 1; ++i) {
 		ctx.beginPath();
 		ctx.moveTo(currentX, 0);
 		ctx.lineTo(currentX, height);

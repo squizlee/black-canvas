@@ -15,8 +15,16 @@
 		
 		ctx = canvas.getContext("2d");
 		ctx.imageSmoothingEnabled = true;
-		canvas.width = container.clientWidth;
+		canvas.width = container.clientHeight;
 		canvas.height = container.clientHeight;
+		
+		window.onresize = () => {
+			canvas.width = container.clientHeight;
+			canvas.height = container.clientHeight;
+			env._width = canvas.width;
+			env._height = canvas.height;
+			
+		}
 
 		// populate ctx
 		env._ctx = ctx;
@@ -50,13 +58,24 @@
 		grid-row-start: 2;
 	}
 	
+	canvas {
+		display: block;
+		margin: 0 auto;
+	}
+	
 	#canvas-container {
 		border: 1px solid white;
 		grid-row-start: 1;
 		grid-row-end: 3;
-		margin: auto;
 		height: 100vh;
 		width: 100%;
+	}
+	
+	@media screen and (max-width: 1000px) {
+		main {
+			display: flex;
+			flex-direction: column;
+		}
 	}
 	
 </style>
