@@ -38,7 +38,13 @@ const env = {
 	"set-fillStyle": (args) => {
 		env._ctx.fillStyle = args[0];
 	},
+	"set-strokeStyle": (args) => {
+		env._ctx.strokeStyle = args[0];
+	},
 	fillRect: (args) => env._ctx.fillRect(args[0], args[1], args[2], args[3]),
+	strokeRect: (args) => {
+		env._ctx.strokeRect(...args);
+	},
 
 	// BLISP API
 	// ARGS:
@@ -46,8 +52,6 @@ const env = {
 	"set-context": (args) => {
 		console.log(args);
 		let size = args[1];
-		let width;
-		let height;
 		util.drawGrid(env._ctx, size);
 	},
 	clear: () => {

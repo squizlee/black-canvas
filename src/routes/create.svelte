@@ -25,6 +25,12 @@
 			env._height = canvas.height;
 			
 		}
+		
+		canvas.onclick = (e) => {
+			let x = e.layerX;
+			let y = e.layerY;
+			console.log(x, y);
+		}
 
 		// populate ctx
 		env._ctx = ctx;
