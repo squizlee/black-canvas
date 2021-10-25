@@ -50,7 +50,7 @@ function evaluate(AST) {
 	let program = {}; // @reminder append this to env
 	let funcs = {};
 	//let currentContext = program;
-	logAST(AST);
+	//logAST(AST);
 
 	// takes a token and evaluates it to a js value
 	const handleType = (token, context = program) => {
@@ -67,6 +67,7 @@ function evaluate(AST) {
 				else if (program[token.value]) return program[token.value];
 				return token.value;
 			case "LIST":
+				console.log("REACHED IN LIST WHICH SHOULDN'T HAPPEN");
 				evalList(token);
 				return token.value;
 			case "TRUE":
@@ -121,13 +122,11 @@ function evaluate(AST) {
 			let func_body = list.children[2];
 
 			let func_name = func_signature.children[0].value;
-			//console.log("SIG", func_signature);
-			//console.log("BODY", func_body);
 
 			// gather parameters
 			let parameters = [];
-			for (let i = 1; i < func_body.children.length; ++i) {
-				parameters.push(func_body.children[i].value);
+			for (let i = 1; i < func_signature.children.length; ++i) {
+				parameters.push(func_signature.children[i].value);
 			}
 
 			let func_context = {};
@@ -136,15 +135,15 @@ function evaluate(AST) {
 			});
 			// add to funcs scope
 			funcs[func_name] = { context: func_context, body: func_body };
+			console.log("creating", func_name, funcs[func_name]);
 
 			return `${func_name} created`;
 		};
 
-		let answer;
-
-		let elements = list.children;
-		let operator = elements[0].value;
-		let args = [];
+		let answer; // output
+		let elements = list.children; // list's arguments including operator
+		let operator = elements[0].value; // the function to execute
+		let args = []; // input
 
 		switch (operator) {
 			case "let":
@@ -157,18 +156,20 @@ function evaluate(AST) {
 				// collect arguments
 				for (let i = 1; i < elements.length; ++i) {
 					if (elements[i].type === "LIST") {
-						args.push(evalList(elements[i]));
+						args.push(evalList(elements[i], context));
 					} else {
 						args.push(handleType(elements[i], context));
 					}
 				}
 				if (funcs[operator]) {
+					console.log("FUNCS", funcs);
 					// TODO: error checking for more than expected arguments, or less
 					// we need to set args to context
-					console.log("context", funcs[operator].context);
 					let context = funcs[operator].context;
+					console.log(context);
 					// map args onto list's context
 					let parameters = Object.keys(context);
+					console.log("params", parameters);
 					for (let i = 0; i < parameters.length; ++i) {
 						context[parameters[i]] = args[i];
 					}
