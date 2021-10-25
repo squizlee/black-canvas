@@ -13,6 +13,7 @@ const TokenTypes = {
 	SYMBOL: "SYMBOL",
 	LET: "LET",
 	IF: "IF",
+	COND: "COND",
 	ELSE: "ELSE",
 	TRUE: "TRUE",
 	FALSE: "FALSE",
@@ -22,6 +23,7 @@ const Keywords = new Map();
 Keywords.set("let", "LET");
 Keywords.set("func", "FUNC");
 Keywords.set("if", "IF");
+Keywords.set("cond", "COND");
 Keywords.set("else", "ELSE");
 Keywords.set("true", "TRUE");
 Keywords.set("false", "FALSE");
@@ -46,10 +48,12 @@ function interpret(sourceCode) {
 function evaluate(AST) {
 	let output = []; // array of outputs
 	let program = {}; // @reminder append this to env
+	let funcs = {};
+	//let currentContext = program;
 	logAST(AST);
 
 	// takes a token and evaluates it to a js value
-	const handleType = (token) => {
+	const handleType = (token, context = program) => {
 		switch (token.type) {
 			case "STRING":
 				return token.value;
@@ -57,11 +61,17 @@ function evaluate(AST) {
 				return Number(token.value);
 			// ignore symbols
 			case "SYMBOL":
-				if (program[token.value]) return program[token.value];
+				// check local/parent scopes
+				if (context[token.value]) return context[token.value];
+				// check global
+				else if (program[token.value]) return program[token.value];
 				return token.value;
 			case "LIST":
 				evalList(token);
 				return token.value;
+			case "TRUE":
+			case "FALSE":
+				return Boolean(token.value);
 			//return token.value;
 			default:
 				console.log("ERROR", token);
@@ -70,10 +80,9 @@ function evaluate(AST) {
 		}
 	};
 
-	//@BUG Symbols aren't evaluated as their values
-
 	// evaluate list and return value
-	const evalList = (list) => {
+	// context contains scoped variables and their values
+	const evalList = (list, context = program) => {
 		// helper functions
 		const numArgs = (list) => list.children.length - 1; // exclude operator
 		const LET = () => {
@@ -101,10 +110,6 @@ function evaluate(AST) {
 		};
 
 		const FUNC = () => {
-			let output;
-			let func_name;
-			let elements = [list.children[1], list.children[2]];
-			let parameters = [];
 			if (numArgs(list) < 2) {
 				error(
 					"Func expects the form (func (<name> <parameters>...) ...(<body>)"
@@ -112,9 +117,27 @@ function evaluate(AST) {
 				return;
 			}
 
-			console.log("ELEMENTS", elements);
+			let func_signature = list.children[1];
+			let func_body = list.children[2];
 
-			return "Functions not implemented yet";
+			let func_name = func_signature.children[0].value;
+			//console.log("SIG", func_signature);
+			//console.log("BODY", func_body);
+
+			// gather parameters
+			let parameters = [];
+			for (let i = 1; i < func_body.children.length; ++i) {
+				parameters.push(func_body.children[i].value);
+			}
+
+			let func_context = {};
+			parameters.forEach((curr) => {
+				func_context[curr] = null;
+			});
+			// add to funcs scope
+			funcs[func_name] = { context: func_context, body: func_body };
+
+			return `${func_name} created`;
 		};
 
 		let answer;
@@ -135,9 +158,23 @@ function evaluate(AST) {
 				for (let i = 1; i < elements.length; ++i) {
 					if (elements[i].type === "LIST") {
 						args.push(evalList(elements[i]));
-					} else args.push(handleType(elements[i]));
+					} else {
+						args.push(handleType(elements[i], context));
+					}
 				}
-				answer = env[operator](args);
+				if (funcs[operator]) {
+					// TODO: error checking for more than expected arguments, or less
+					// we need to set args to context
+					console.log("context", funcs[operator].context);
+					let context = funcs[operator].context;
+					// map args onto list's context
+					let parameters = Object.keys(context);
+					for (let i = 0; i < parameters.length; ++i) {
+						context[parameters[i]] = args[i];
+					}
+					answer = evalList(funcs[operator].body, context);
+					break;
+				} else answer = env[operator](args);
 				list.value = answer;
 				break;
 		}
@@ -153,9 +190,11 @@ function evaluate(AST) {
 			output.push(handleType(item.children[0]));
 		}
 	}
+
+	program.funcs = funcs;
 	env.program = program;
 	// @BUG?: sometimes gets pushed to answer when list is a procedure and not a function
-	console.log(output);
+	//console.log(output);
 	console.log(output.filter((el) => el !== undefined));
 }
 

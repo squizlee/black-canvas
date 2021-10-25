@@ -5,7 +5,6 @@
 
 
 	function keyInput(e){
-		console.log("Key Input!:", e);
 		if(e.key === "Tab"){
 			e.preventDefault();
 			sourceCode += "    ";
