@@ -7,7 +7,7 @@
 	function keyInput(e){
 		if(e.key === "Tab"){
 			e.preventDefault();
-			sourceCode += "    ";
+			sourceCode += "  ";
 		}
 		
 		if(e.key === "Enter" && e.ctrlKey )
