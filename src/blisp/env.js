@@ -49,6 +49,7 @@ const env = {
 	// BLISP API
 	// ARGS:
 	//		CONTEXT: STRING ("grid")
+	context: null, // context defines a number of available functionality to be used by the creator
 	"set-context": (args) => {
 		console.log(args);
 		let size = args[1];
