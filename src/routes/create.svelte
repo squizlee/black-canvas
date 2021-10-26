@@ -52,7 +52,6 @@
 	}
 	
 	#text-editor-container {
-		border: 1px solid red;
 		grid-row-start: 1;
 		padding: 2rem;
 		padding-left: 20px;
@@ -60,17 +59,16 @@
 	}
 	
 	#debug {
-		border: 1px solid blue;
 		grid-row-start: 2;
 	}
 	
 	canvas {
 		display: block;
 		margin: 0 auto;
+		outline: 1px dashed white;
 	}
 	
 	#canvas-container {
-		border: 1px solid white;
 		grid-row-start: 1;
 		grid-row-end: 3;
 		height: 100vh;

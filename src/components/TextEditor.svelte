@@ -1,5 +1,6 @@
 <script>
-	let sourceCode = `;; Author: Unknown\n(set-context \"grid\" 10)`;
+	let sourceCode = 
+	`;; Author: Unknown \n(set-context \"grid\" 10)`;
 	import interpreter from "../blisp/interpreter";
 	import env from "../blisp/env.js";
 
