@@ -1,5 +1,6 @@
 // THE ENTRY POINT I.E. Main
 //
+import { xlink_attr } from "svelte/internal";
 import Tree from "./data_structures/Tree.js";
 import env from "./env.js";
 
@@ -18,6 +19,7 @@ const TokenTypes = {
 	TRUE: "TRUE",
 	FALSE: "FALSE",
 };
+Object.freeze(TokenTypes);
 
 const Keywords = new Map();
 Keywords.set("let", "LET");
@@ -61,14 +63,21 @@ function evaluate(AST) {
 				return Number(token.value);
 			// ignore symbols
 			case "SYMBOL":
+				if (/\./.test(token.value)) {
+					let regex = /(\w+)\.(\w+)+$/;
+					let res = token.value.match(regex);
+					let key = res[1];
+					let prop = res[2];
+					// derenference object
+					return context[key][prop] || program[key][prop];
+				}
 				// check local/parent scopes
 				if (context[token.value]) return context[token.value];
 				// check global
 				else if (program[token.value]) return program[token.value];
 				return token.value;
 			case "LIST":
-				console.log("REACHED IN LIST WHICH SHOULDN'T HAPPEN");
-				evalList(token);
+				token.value = evalList(token);
 				return token.value;
 			case "TRUE":
 			case "FALSE":
@@ -140,6 +149,18 @@ function evaluate(AST) {
 			return `${func_name} created`;
 		};
 
+		const OBJ = () => {
+			let args = list.children;
+			console.log("args inside OBJ", args);
+			let obj = {};
+			for (let i = 1; i < args.length; i += 2) {
+				obj[args[i].value] = handleType(args[i + 1]);
+			}
+
+			console.log("obj", obj);
+			return obj;
+		};
+
 		let answer; // output
 		let elements = list.children; // list's arguments including operator
 		let operator = elements[0].value; // the function to execute
@@ -151,6 +172,9 @@ function evaluate(AST) {
 				break;
 			case "func":
 				answer = FUNC();
+				break;
+			case "obj":
+				answer = OBJ();
 				break;
 			default:
 				// collect arguments
@@ -224,7 +248,7 @@ function tokenize(source) {
 
 	// decimal point allowed
 	const isDigit = (char) => /\d/.test(char);
-	const isAlphaNumeric = (char) => /(\d|\w|-|_)/.test(char); // support hyphen and underscores in symbols
+	const isAlphaNumeric = (char) => /(\d|\w|-|_|:|\.)/.test(char); // support hyphen and underscores in symbols
 
 	const tokens = [];
 	let current = 0; // current position in the source code
