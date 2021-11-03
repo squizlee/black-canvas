@@ -150,6 +150,7 @@ function evaluate(AST) {
 			return `${func_name} created`;
 		};
 
+		// @IMPROVE
 		const OBJ = () => {
 			let args = list.children;
 			console.log("args inside OBJ", args);
@@ -162,12 +163,25 @@ function evaluate(AST) {
 			return obj;
 		};
 
+		const IF = () => {
+			console.log("IF LIST", list);
+			let predicate = list.children[1];
+			let trueClause = list.children[2];
+			let falseClause = list.children[2];
+
+			return handleType(predicate)
+				? handleType(trueClause)
+				: handleType(falseClause);
+		};
+
 		let answer; // output
+		console.log("ELEMENTS", list.children);
 		let elements = list.children; // list's arguments including operator
 		let operator = elements[0].value; // the function to execute
 		let args = []; // input
 
 		switch (operator) {
+			// special forms with their own evaluation rules
 			case "let":
 				answer = LET();
 				break;
@@ -177,6 +191,10 @@ function evaluate(AST) {
 			case "obj":
 				answer = OBJ();
 				break;
+			case "if":
+				answer = IF();
+				break;
+			// apply normal evaluation procedure
 			default:
 				// collect arguments
 				for (let i = 1; i < elements.length; ++i) {

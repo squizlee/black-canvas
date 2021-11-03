@@ -22,6 +22,19 @@ const env = {
 		}, 0);
 	},
 
+	// PREDICATES: Return true or false
+	"=": (args) => {
+		let length = args.length;
+		if (length < 2) {
+			return "Error: procedure '=' expects more than 1 argument";
+		}
+		for (let i = 1; i < length; ++i) {
+			if (args[i - 1] !== args[i]) return false;
+		}
+
+		return true;
+	},
+
 	// misc
 	// args: array
 	debug: (args) => {
