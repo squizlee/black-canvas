@@ -45,8 +45,42 @@ const env = {
 	strokeRect: (args) => {
 		env._ctx.strokeRect(...args);
 	},
+	clearRect: (args) => {
+		env._ctx.clearRect(args[0], args[1], args[2], args[3]);
+	},
 
-	// BLISP API
+	// CANVAS API: Drawing text
+	fillText(args) {
+		env._ctx.fillText(args[0], args[1], args[2], args[3]);
+	},
+	strokeText(args) {
+		env._ctx.strokeText(args[0], args[1], args[2], args[3]);
+	},
+	measureText(args) {
+		return env._ctx.measureText(args[0]);
+	},
+
+	// CANVAS API: Line Styling
+	"set-lineWidth": (args) => {
+		env._ctx.lineWidth = args[0];
+	},
+	"set-lineCap": (args) => {
+		env._ctx.lineCap = args[0];
+	},
+	"set-lineJoin": (args) => {
+		env._ctx.lineJoin = args[0];
+	},
+	"get-lineDash": (args) => {
+		return env._ctx.getLineDash();
+	},
+	"set-lineDash": (args) => {
+		env._ctx.setLineDash(args[0]);
+	},
+	"set-lineDashOffset": (args) => {
+		env._ctx.lineDashOffset = args[0];
+	},
+
+	// BLISP API -------------------
 	// ARGS:
 	//		CONTEXT: STRING ("grid")
 	context: null, // context defines a number of available functionality to be used by the creator

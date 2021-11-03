@@ -63,6 +63,7 @@ function evaluate(AST) {
 				return Number(token.value);
 			// ignore symbols
 			case "SYMBOL":
+				// property @IMPROVE the regex search
 				if (/\./.test(token.value)) {
 					let regex = /(\w+)\.(\w+)+$/;
 					let res = token.value.match(regex);

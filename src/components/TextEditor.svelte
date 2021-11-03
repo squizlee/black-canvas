@@ -1,9 +1,10 @@
 <script>
-	let sourceCode = 
-	`;; Author: Unknown \n(set-context \"grid\" 10)`;
+
+	import source from "../temp_script";
 	import interpreter from "../blisp/interpreter";
 	import env from "../blisp/env.js";
 
+	let sourceCode = source;
 
 	function keyInput(e){
 		if(e.key === "Tab"){
