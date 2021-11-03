@@ -6,6 +6,7 @@ const scriptPath = "../../documentation/example_programs/";
 const scripts = {
 	funcs_and_variables: "funcs_and_variables.bl",
 	objects: "objects.bl",
+	cond: "cond.bl",
 };
 
 function readFile(scriptName) {
@@ -17,7 +18,7 @@ function readFile(scriptName) {
 }
 
 function main() {
-	readFile(scripts.objects);
+	readFile(scripts.cond);
 }
 
 main();

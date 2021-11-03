@@ -174,8 +174,23 @@ function evaluate(AST) {
 				: handleType(falseClause);
 		};
 
+		const COND = () => {
+			console.log("list in cond", list);
+			for (let i = 1; i < list.children.length - 1; ++i) {
+				let pair = list.children[i].children;
+				console.log("pair", pair);
+				if (handleType(pair[0])) {
+					// if the predicate is true
+					return handleType(pair[1]);
+				}
+			}
+			let finalClaus = list.children[list.children.length - 1].children;
+			if (finalClaus[0].value === "else" || handleType(finalClaus[0])) {
+				return handleType(finalClaus[1]);
+			}
+		};
+
 		let answer; // output
-		console.log("ELEMENTS", list.children);
 		let elements = list.children; // list's arguments including operator
 		let operator = elements[0].value; // the function to execute
 		let args = []; // input
@@ -193,6 +208,9 @@ function evaluate(AST) {
 				break;
 			case "if":
 				answer = IF();
+				break;
+			case "cond":
+				answer = COND();
 				break;
 			// apply normal evaluation procedure
 			default:
