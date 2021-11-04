@@ -10,6 +10,12 @@
 			href: "https://thenounproject.com/search/?q=question+mark&i=3368679",
 			icon: "Question"
 		},
+		{
+			author: "Ilaria Bernareggi",
+			href: "https://thenounproject.com/search/?q=home&i=508962",
+			icon: "Home"
+			
+		}
 	];
 </script>
 

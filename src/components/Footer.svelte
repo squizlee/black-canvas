@@ -1,20 +1,39 @@
 <script>
-	let links = [
-		{
-			id: "lab",
-			icon: "/icons/lab.svg",
-			alt: "Lab icon",
-			href: "/lab",
-			text: "LAB"
-		},
-		{
-			id: "about",
-			icon: "/icons/question.svg",
-			alt: "About icon",
-			href: "/about",
-			text: "ABOUT"
-		}
-	];
+import { onMount } from "svelte";
+let links = [
+	{
+		id: "home",
+		icon: "/icons/home.svg",
+		alt: "Pixel home icon",
+		href: "/",
+		text: "HOME"
+	},
+	{
+		id: "world",
+		icon: "/icons/globe.svg",
+		alt: "globe icon",
+		href: "/world",
+		text: "WORLD"
+	},
+	{
+		id: "lab",
+		icon: "/icons/lab.svg",
+		alt: "Lab icon",
+		href: "/lab",
+		text: "LAB"
+	},
+	{
+		id: "about",
+		icon: "/icons/question.svg",
+		alt: "About icon",
+		href: "/about",
+		text: "ABOUT"
+	},
+];
+	onMount(() => {
+		let currentAddress = window.location.pathname;
+		links = links.filter((element) => element.href !== currentAddress);	
+	});
 </script>
 
 <section id="footer">
@@ -30,14 +49,13 @@
 
 <style>
 	#footer {
-		background-image: radial-gradient(circle at center, #e7e7e7 50%, var(--off-black));
 		background-color: #e7e7e7;
 		display: flex;
 		justify-content: center;
 		position: absolute;
 		bottom: 0;
 		width: 100%;
-		border-radius: 8px;
+		border-radius: 2px;
 		padding: 0.25rem;
 	}
 	
@@ -53,7 +71,9 @@
 	
 	.link > img{
 		aspect-ratio: 1;
-		width: 5rem;
+		width: 3rem;
+		display: block;
+		margin: 0 auto;
 	}
 	
 	.link > a,p {
