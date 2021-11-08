@@ -1,15 +1,14 @@
 <script>
 
-	import source from "../temp_script";
+	import {program_source} from "../state/program_source.js";
 	import interpreter from "../blisp/interpreter";
 	import env from "../blisp/env.js";
-
-	let sourceCode = source;
 
 	function keyInput(e){
 		if(e.key === "Tab"){
 			e.preventDefault();
-			sourceCode += "  ";
+			//sourceCode += "  ";
+			program_source.update(val => val + '  ');
 		}
 		
 		if(e.key === "Enter" && e.ctrlKey )
@@ -17,7 +16,7 @@
 			// clear canvas before running again
 			env.clear();
 			// pass value to interpreter
-			interpreter(sourceCode);
+			interpreter($program_source);
 		}
 		
 	}
@@ -36,4 +35,4 @@
 	}
 </style>
 
-<textarea spellcheck="false" autocomplete="false" autocorrect="off" id="text-editor" cols="30" rows="10" bind:value={sourceCode} on:keydown={keyInput}></textarea>
+<textarea spellcheck="false" autocomplete="false" autocorrect="off" id="text-editor" cols="30" rows="10" bind:value={$program_source} on:keydown={keyInput}></textarea>
