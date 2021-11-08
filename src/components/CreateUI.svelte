@@ -1,9 +1,10 @@
 <script>
 // UI and Logic for handling UI events
 import axios from "axios";
+import {program_source} from "../state/program_source.js";
 
 function submit() {
-	console.log("Hi there");
+	console.log("submit", $program_source);
 }
 
 function save() {
