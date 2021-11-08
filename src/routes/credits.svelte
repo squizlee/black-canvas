@@ -14,7 +14,17 @@
 			author: "Ilaria Bernareggi",
 			href: "https://thenounproject.com/search/?q=home&i=508962",
 			icon: "Home"
+		},
+		{
+			author: "zidney",
+			href: "https://thenounproject.com/search/?q=globe&i=1427013",
+			icon: "Globe"
 			
+		},
+		{
+			author: "The Icon Z, ID",
+			href: "https://thenounproject.com/search/?q=person&i=3324299",
+			icon: "person"
 		}
 	];
 </script>

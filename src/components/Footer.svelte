@@ -29,6 +29,14 @@ let links = [
 		href: "/about",
 		text: "ABOUT"
 	},
+	{
+		id: "profile",
+		icon: "/icons/person.svg",
+		alt: "Person icon",
+		href: "/profile",
+		text: "PROFILE"
+	},
+
 ];
 	onMount(() => {
 		let currentAddress = window.location.pathname;

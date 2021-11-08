@@ -1,9 +1,13 @@
 let source = `
-;; cond takes a sequence of lists that themselves contain a test and an action
+;; simple canvas api operations
+;; variables and math
+(set-fillStyle "green")
+(fillRect 10 10 250 250)
 
-(let x 1)
-(cond ((> x -10) "x is greater than -10")
-  (else "else clause hit"))
+(let color "yellow")
+(set-fillStyle color)
+(fillRect 10 300 250 250)
+
 `;
 
 export default source;

@@ -2,6 +2,7 @@
 // @ts-nocheck
 
 	import { onMount } from "svelte";
+	import CreateUI from "../components/CreateUI.svelte";
 	import TextEditor from "../components/TextEditor.svelte";
 	import env from "../blisp/env.js";
 	
@@ -86,6 +87,7 @@
 
 
 <main>
+	<CreateUI />
 	<section id="text-editor-container">
 		<TextEditor />
 	</section>

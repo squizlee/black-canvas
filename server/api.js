@@ -1,27 +1,26 @@
 import { Router } from "express";
-import bcrypt from "bcrypt";
+import hash from "./hash.js";
 import connect from "./db/connect.js";
+import bcrypt from "bcrypt";
 
 const router = Router();
 
-router.post("/register", (req, res) => {
+router.post("/register", async (req, res) => {
 	console.log("POST to register");
 	console.log(req.body);
 	let body = req.body;
-	// hash
-	const saltRounds = 10;
-	bcrypt.hash(body.password, saltRounds, async (err, hash) => {
-		if (err) {
-			res.status(500).send();
-		}
+	// hashing of password
+	const hashedPassword = await hash(body.password);
+	if (hashedPassword === -1) res.status(500).send("Internal Server Error");
 
-		const db = await connect();
-		db.run("INSERT INTO users (username, password) VALUES (?, ?)", [
-			body.username,
-			hash,
-		]);
-		res.status(200).send("ok!");
-	});
+	console.log("hashed password", hashedPassword);
+
+	const db = await connect();
+	db.run("INSERT INTO users (username, password) VALUES (?, ?)", [
+		body.username,
+		hashedPassword,
+	]);
+	res.status(200).send("ok!");
 });
 
 router.post("/login", async (req, res) => {

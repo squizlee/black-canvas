@@ -1,4 +1,7 @@
 import connect from "./connect.js";
+import { hashSync, randomBytes } from "../hash.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 // POPULATES DB WITH TABLES AND DUMMY DATA
 async function init() {
@@ -30,6 +33,20 @@ async function init() {
 
 	await db.exec(createUsersTable); // create tables
 	await db.exec(createCreationsTable); // create tables
+
+	// insert root/admin
+	// @IMPORTANT: ROOT PASSWORD SHOULD ALWAYS BE SET IN .env FOR SECURITY
+	await db.exec(
+		`INSERT INTO users (username, password) VALUES ('root', '${hashSync(
+			process.env.ROOT_PASSWORD || "manual"
+		)}')`
+	);
+
+	await db.exec(
+		`INSERT INTO users (username, password) VALUES ('anon', '${hashSync(
+			randomBytes()
+		)}')`
+	);
 	console.log("SUCCESS");
 }
 

@@ -4,7 +4,8 @@ config();
 import express from "express";
 import apiRouter from "./api.js";
 import connect from "./db/connect.js";
-import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import ms from "ms";
 
 const app = express();
 const PORT = 8000;
@@ -21,8 +22,8 @@ app.use((req, res, next) => {
 	);
 	next();
 });
-app.use(bodyParser.json()); // handle json in body
-
+app.use(express.json()); // handle json in body
+app.use(cookieParser({ httpOnly: true, expires: Date.now() * ms("24h") }));
 // middleware
 app.use("/api", apiRouter);
 
