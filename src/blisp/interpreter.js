@@ -31,6 +31,7 @@ Keywords.set("else", "ELSE");
 Keywords.set("true", "TRUE");
 Keywords.set("false", "FALSE");
 Keywords.set("obj", "OBJ");
+Keywords.set("array", "ARRAY");
 
 let hasErrors = false;
 
@@ -53,21 +54,20 @@ function evaluate(AST) {
 	let output = []; // array of outputs
 	let program = {}; // @reminder append this to env
 	let funcs = {};
-	//let currentContext = program;
 	//logAST(AST);
 
-	// takes a token and evaluates it to a js value
+	// takes a token and evaluates it to a JS value
 	const handleType = (token, context = program) => {
 		switch (token.type) {
 			case "STRING":
 				return token.value;
 			case "NUMBER":
 				return Number(token.value);
-			// ignore symbols
 			case "SYMBOL":
-				const regex = /(?<one>\w+)(?<type>\.)(?<two>\w+)/g;
+				// check if it is an object (contains a '.') OR an array (uses '[<integer>]')
+				const regex =
+					/(?<one>\w+)(?<type>\.|\[(?<index>\d)\])(?<two>\w+)/g;
 				const found = [...token.value.matchAll(regex)];
-				console.log("found", found);
 				if (found) {
 					let result;
 					for (let i = 0; i < found.length; ++i) {
@@ -75,16 +75,13 @@ function evaluate(AST) {
 						let key = groups.one;
 						let prop = groups.two;
 						if (i === 0) {
-							result = context[key][prop] || program[key][prop];
+							result = context[key][prop] || program[key][prop]; // find the parent
 						} else {
-							result = result[key][prop];
+							result = result[key][prop]; // continue dereferencing
 						}
 					}
 
-					console.log("RESULT", result);
 					return result;
-					// derenference object
-					//return context[key][prop] || program[key][prop];
 				}
 				// check local/parent scopes
 				if (context[token.value]) return context[token.value];
@@ -164,17 +161,25 @@ function evaluate(AST) {
 			return `${func_name} created`;
 		};
 
-		// @IMPROVE
 		const OBJ = () => {
 			let args = list.children;
-			console.log("args inside OBJ", args);
 			let obj = {};
 			for (let i = 1; i < args.length; i += 2) {
 				obj[args[i].value] = handleType(args[i + 1]);
 			}
 
-			console.log("obj", obj);
 			return obj;
+		};
+
+		const ARRAY = () => {
+			let args = list.children;
+			console.log("array args", args);
+
+			let newArray = [];
+			for (let i = 1; i < args.length; ++i) {
+				newArray.push(handleType(args[i]));
+			}
+			return newArray;
 		};
 
 		const IF = () => {
@@ -219,6 +224,9 @@ function evaluate(AST) {
 				break;
 			case "obj":
 				answer = OBJ();
+				break;
+			case "array":
+				answer = ARRAY();
 				break;
 			case "if":
 				answer = IF();

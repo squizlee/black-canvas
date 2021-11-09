@@ -11,3 +11,9 @@
 
 x.pet;; should return {name: "fido", friend: {name: "jessie"}}
 x.pet.friend.name ;; should return "jessie"
+
+
+;; Array intialization
+
+(let x 
+	(array 1 2 3 4))
