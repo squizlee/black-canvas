@@ -2,7 +2,6 @@ import { Router } from "express";
 import hash, { randomBytes } from "./hash.js";
 import connect from "./db/connect.js";
 import bcrypt from "bcrypt";
-import cookieParser from "cookie-parser";
 import ms from "ms";
 
 const router = Router();
@@ -49,7 +48,6 @@ router.post("/login", async (req, res) => {
 				if (result) {
 					let cookieOptions = {
 						signed: true,
-						maxAge: ms("24hrs"),
 					};
 					// create cookie
 					// todo: do we need to set a token?
@@ -70,6 +68,13 @@ router.get("/profile", (req, res) => {
 	let username = req.signedCookies.username;
 	let profileInformation = { username };
 	return res.send(profileInformation);
+});
+
+// clear all cookies
+router.get("/logout", (req, res) => {
+	res.clearCookie("username");
+	res.clearCookie("token");
+	res.send("logout successful");
 });
 
 export default router;

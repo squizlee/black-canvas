@@ -1,7 +1,6 @@
 <script>
 	import axios from "axios";
 	import { goto } from "$app/navigation";
-	import { fade } from "svelte/transition";
 
 	let username;
 	let password;
