@@ -66,7 +66,7 @@ function evaluate(AST) {
 			case "SYMBOL":
 				// check if it is an object (contains a '.') OR an array (uses '[<integer>]')
 				const regex =
-					/(?<one>\w+)(?<type>\.|\[(?<index>\d)\])(?<two>\w+)/g;
+					/(?<one>\w+)(?<type>\.|\[(?<index>\d)\])(?<two>\w+)?/g;
 				const found = [...token.value.matchAll(regex)];
 				if (found) {
 					let result;
@@ -75,9 +75,19 @@ function evaluate(AST) {
 						let key = groups.one;
 						let prop = groups.two;
 						if (i === 0) {
-							result = context[key][prop] || program[key][prop]; // find the parent
+							if (groups.type !== ".") {
+								result =
+									context[key][groups.index] ||
+									program[key][groups.index];
+							} else {
+								result =
+									context[key][prop] || program[key][prop]; // find the parent
+							}
+							// if it's an array
 						} else {
-							result = result[key][prop]; // continue dereferencing
+							// continue derenferencing
+							result =
+								result[key][prop] || result[key][groups.index];
 						}
 					}
 
@@ -173,7 +183,6 @@ function evaluate(AST) {
 
 		const ARRAY = () => {
 			let args = list.children;
-			console.log("array args", args);
 
 			let newArray = [];
 			for (let i = 1; i < args.length; ++i) {
@@ -183,7 +192,6 @@ function evaluate(AST) {
 		};
 
 		const IF = () => {
-			console.log("IF LIST", list);
 			let predicate = list.children[1];
 			let trueClause = list.children[2];
 			let falseClause = list.children[2];
@@ -194,10 +202,8 @@ function evaluate(AST) {
 		};
 
 		const COND = () => {
-			console.log("list in cond", list);
 			for (let i = 1; i < list.children.length - 1; ++i) {
 				let pair = list.children[i].children;
-				console.log("pair", pair);
 				if (handleType(pair[0])) {
 					// if the predicate is true
 					return handleType(pair[1]);
