@@ -1,13 +1,20 @@
 (set-context "grid" 10) ;; 10x10 grid
+;; grid-context should provide array of cells
+(grid-cells)
 
 ;; colours
-(let alive "green")
-(let dead "black")
+(let alive "white")
 
-(func (change-state cell)
-	(set cell:state (not cell:state)))
+;; loop through each cell and check neighbors
+(func (update-state) (true)
+	(if ()))
 
-(func (update grid))
+;; handle click 
+(func (toggle-cell cell)
+ ("implement me"))
 
-; event-handling
-(on:click cell (change-state cell))
+;; in grid context - clicked cell is passed to event handler
+(on:click (toggle-cell cell))
+
+;; animate
+(animate update-state 1000) ;; animate every second

@@ -9,6 +9,12 @@ const config = {
 	kit: {
 		// hydrate the <div id="app"> element in src/app.html
 		target: "#app",
+
+		vite: {
+			optimizeDeps: {
+				exclude: ["svelte-modals"],
+			},
+		},
 	},
 };
 
