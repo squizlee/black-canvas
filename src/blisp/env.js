@@ -6,6 +6,7 @@ const env = {
 	// arithmetic
 	// nums: array
 	"+": (nums) => {
+		console.log("nums", nums);
 		if (!nums) return 0;
 		return nums.reduce((prev, curr) => prev + curr, 0);
 	},

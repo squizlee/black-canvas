@@ -1,6 +1,5 @@
 // THE ENTRY POINT I.E. Main
 //
-import { xlink_attr } from "svelte/internal";
 import Tree from "./data_structures/Tree.js";
 import env from "./env.js";
 
@@ -68,7 +67,7 @@ function evaluate(AST) {
 				const regex =
 					/(?<one>\w+)(?<type>\.|\[(?<index>\d)\])(?<two>\w+)?/g;
 				const found = [...token.value.matchAll(regex)];
-				if (found) {
+				if (found.length > 0) {
 					let result;
 					for (let i = 0; i < found.length; ++i) {
 						let groups = found[i].groups;
@@ -93,6 +92,7 @@ function evaluate(AST) {
 
 					return result;
 				}
+				console.log("TOKEN", token);
 				// check local/parent scopes
 				if (context[token.value]) return context[token.value];
 				// check global
