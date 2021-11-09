@@ -1,7 +1,7 @@
 <script>
 	// UI and Logic for handling UI events
 	import axios from "axios";
-	import { program_source } from "../state/program_source.js";
+	import { program_source } from "../state/program_source";
 	import { onMount } from "svelte";
 
 	let user = "anon";

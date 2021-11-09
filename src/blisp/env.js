@@ -120,6 +120,99 @@ const env = {
 		env._ctx.lineDashOffset = args[0];
 	},
 
+	// CANVAS API: TEXT STYLES
+	"set-font": (args) => {
+		env._ctx.font = args[0];
+	},
+	"set-textAlign": (args) => {
+		env._ctx.textAlign = args[0];
+	},
+	"set-textBaseline": (args) => {
+		env._ctx.textAlign = args[0];
+	},
+	"set-text-direction": (args) => {
+		env._ctx.direction = args[0];
+	},
+
+	// CANVAS API: PATHS
+	beginPath: (args) => {
+		env._ctx.beginPath();
+	},
+	closePath: (args) => {
+		env._ctx.closePath();
+	},
+	moveTo: (args) => {
+		// move to x y
+		env._ctx.moveTo(...args);
+	},
+	lineTo: (args) => {
+		// draw a line to x y from current position
+		env._ctx.lineTo(...args);
+	},
+	bezierCurveTo: (args) => {
+		// cp (control point)
+		// x (x coordinate)
+		// y (y coordinate)
+		// cp1x cp1y, cp2x, cp2y, x, y
+		env._ctx.bezierCurveTo(...args);
+	},
+	quadraticCurveTo: (args) => {
+		// cp (control point)
+		// x (x coordinate)
+		// y (y coordinate)
+		env._ctx.quadraticCurveTo(...args);
+	},
+	arc: (args) => {
+		// x (x coordinate)
+		// y (y coordinate)
+		// radius
+		// startAngle
+		// endAngle
+		env._ctx.arc(...args);
+	},
+	arcTo: (args) => {
+		// x1 (x coordinate)
+		// y1 (y coordinate)
+		// x2 (x coordinate)
+		// y2 (y coordinate)
+		// radius
+		env._ctx.arcTo(...args);
+	},
+	ellipse: (args) => {
+		// x (x coordinate)
+		// y (y coordinate)
+		// radiusX
+		// radiusY
+		// rotation
+		// startAngle
+		// endAngle
+		env._ctx.ellipse(...args);
+	},
+	rectangle: (args) => {
+		// x (x coordinate)
+		// y (y coordinate)
+		// width
+		// height
+		env._ctx.rect(...args);
+	},
+
+	// CANVAS API: Drawing Paths
+	fill: (args) => {
+		env._ctx.fill();
+	},
+	stroke: (args) => {
+		env._ctx.stroke();
+	},
+	clip: (args) => {
+		env._ctx.clip(...args);
+	},
+	isPointInPath: (args) => {
+		return env._ctx.isPointInPath();
+	},
+	isPointInStroke: (args) => {
+		return env._ctx.isPointInStroke();
+	},
+
 	// BLISP API -------------------
 	// ARGS:
 	//		CONTEXT: STRING ("grid")
