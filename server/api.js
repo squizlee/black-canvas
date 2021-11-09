@@ -47,11 +47,15 @@ router.post("/login", async (req, res) => {
 			if (err) res.status(500).send();
 			else {
 				if (result) {
-					// create cookie
-					res.cookie("token", `test`, {
+					let cookieOptions = {
 						signed: true,
 						maxAge: ms("24hrs"),
-					}).send();
+					};
+					// create cookie
+					// todo: do we need to set a token?
+					res.cookie("token", username, cookieOptions);
+					res.cookie("username", username, cookieOptions);
+					res.send();
 					return;
 				} else {
 					res.status(200).send("Error details incorrect");
@@ -61,9 +65,11 @@ router.post("/login", async (req, res) => {
 	}
 });
 
+// return profile information
 router.get("/profile", (req, res) => {
-	console.log(req.signedCookies);
-	return res.send("loading");
+	let username = req.signedCookies.username;
+	let profileInformation = { username };
+	return res.send(profileInformation);
 });
 
 export default router;

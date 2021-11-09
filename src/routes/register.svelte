@@ -1,18 +1,29 @@
 <script>
 	import axios from "axios";
+	import { goto } from "$app/navigation";
+	import { fade } from "svelte/transition";
 
 	let username;
 	let password;
 	let email;
+	let information = "";
+	let isError = false;
 	async function handleSubmit() {
+		isError = false;
+		let res;
 		try {
-			let res = await axios.post("http://localhost:8000/api/register", {
+			res = await axios.post("http://localhost:8000/api/register", {
 				username: username,
 				password: password,
 				email: email,
 			});
+			information = res.data;
+			information += " redirecting you to login";
+			// move to login 3 seconds after
+			setTimeout(() => goto("/login"), 3000);
 		} catch (error) {
-			console.log("ERROR:", error.response.data);
+			information = error.response.data;
+			isError = true;
 		}
 	}
 </script>
@@ -25,9 +36,22 @@
 	<label for="password">password</label>
 	<input type="password" id="password" required bind:value={password} />
 	<input type="submit" value="REGISTER" />
+	<p class={isError ? "error" : "success"}>
+		{information}
+	</p>
 </form>
 
 <p>Already have an account?</p>
 <a href="/login">
 	<button>Log In</button>
 </a>
+
+<style>
+	.error {
+		color: red;
+	}
+
+	.success {
+		color: green;
+	}
+</style>

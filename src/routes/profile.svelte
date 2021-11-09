@@ -9,6 +9,8 @@
 		let res = await axios.get("http://localhost:8000/api/profile", {
 			withCredentials: true,
 		});
+		let profile = res.data;
+		username = profile.username;
 	});
 </script>
 
