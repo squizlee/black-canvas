@@ -39,6 +39,7 @@
 		display: flex;
 		position: absolute;
 		top: 0;
+		left: 1.25rem;
 		height: 2rem;
 		align-items: center;
 	}

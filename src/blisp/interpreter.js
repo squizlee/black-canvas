@@ -18,6 +18,7 @@ const TokenTypes = {
 	ELSE: "ELSE",
 	TRUE: "TRUE",
 	FALSE: "FALSE",
+	OBJ: "OBJ",
 };
 Object.freeze(TokenTypes);
 
@@ -29,6 +30,7 @@ Keywords.set("cond", "COND");
 Keywords.set("else", "ELSE");
 Keywords.set("true", "TRUE");
 Keywords.set("false", "FALSE");
+Keywords.set("obj", "OBJ");
 
 let hasErrors = false;
 
@@ -63,14 +65,26 @@ function evaluate(AST) {
 				return Number(token.value);
 			// ignore symbols
 			case "SYMBOL":
-				// property @IMPROVE the regex search
-				if (/\./.test(token.value)) {
-					let regex = /(\w+)\.(\w+)+$/;
-					let res = token.value.match(regex);
-					let key = res[1];
-					let prop = res[2];
+				const regex = /(?<one>\w+)(?<type>\.)(?<two>\w+)/g;
+				const found = [...token.value.matchAll(regex)];
+				console.log("found", found);
+				if (found) {
+					let result;
+					for (let i = 0; i < found.length; ++i) {
+						let groups = found[i].groups;
+						let key = groups.one;
+						let prop = groups.two;
+						if (i === 0) {
+							result = context[key][prop] || program[key][prop];
+						} else {
+							result = result[key][prop];
+						}
+					}
+
+					console.log("RESULT", result);
+					return result;
 					// derenference object
-					return context[key][prop] || program[key][prop];
+					//return context[key][prop] || program[key][prop];
 				}
 				// check local/parent scopes
 				if (context[token.value]) return context[token.value];
@@ -285,7 +299,7 @@ function tokenize(source) {
 
 	// decimal point allowed
 	const isDigit = (char) => /\d/.test(char);
-	const isAlphaNumeric = (char) => /(\d|\w|-|_|:|\.)/.test(char); // support hyphen and underscores in symbols
+	const isAlphaNumeric = (char) => /(\d|\w|-|_|:|\.|\?|\[|\])/.test(char); // support hyphen and underscores in symbols
 
 	const tokens = [];
 	let current = 0; // current position in the source code

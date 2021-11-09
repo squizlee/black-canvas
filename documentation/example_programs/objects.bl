@@ -3,15 +3,11 @@
 (let x (obj 
 	name "ethan"
 	test true
+	pet (obj name "fido" 
+		friend 
+		(obj name "jessie"))
 ))
 
-(let y (obj
-	pet (obj name "polly" subpet (obj name "jeff"))
-	loved true))
 
-(debug x)
-(debug x.name)
-
-
-(debug y)
-(debug y.pet.name)
+x.pet;; should return {name: "fido", friend: {name: "jessie"}}
+x.pet.friend.name ;; should return "jessie"

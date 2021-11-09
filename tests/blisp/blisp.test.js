@@ -18,7 +18,7 @@ function readFile(scriptName) {
 }
 
 function main() {
-	readFile(scripts.cond);
+	readFile(scripts.objects);
 }
 
 main();
