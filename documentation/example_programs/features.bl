@@ -1,0 +1,21 @@
+;; or as standalone atoms
+
+"Atom string" ;; strings are surrounded by quotes
+ 
+ ;; functions are supported
+(func (add-two x y) (+ x y))
+
+;; as well as lexically scoped variables 
+(let global-variable "I am a global variable") 
+
+;; create objects with the obj command and supplying key value pairs
+(let my_obj (obj name "my favorite object"))
+;; create arrays with array command
+(let numbers (array 1 2 3 4 5))
+
+;; conditionals
+(if (= 1 1 ) "true" "false")
+;; switch statement similar to c
+(let num 10)
+(cond ((> num 10) "not greater)
+    (else "This will run"))
